@@ -6,7 +6,31 @@ This is your chance to highlight what makes your bot unique, why someone may wan
 ![Btree](Btree.png)
 
 Provide the list of required dependencies for both your chosen game and your bot. (5 Points)
-These dependencies should be listed separately, and there may be overlap between the two.
+### Dependencies
+These are the dependencies that will be installed when the Rocket League Bot Gui is first run. They are:
+
+- backports
+- certifi
+- chardet
+- colorama
+- configparser.py
+- crayons
+- dataclasses.py
+- flatbuffers
+- idna
+- inputs.py
+- numpy
+- psutil
+- py4j
+- PyQt5
+- requests
+- rlbot
+- rlbot_gui
+- RLUtilities
+- selenium
+- urllib3
+- webdriver_manager
+- websockets
 
 Provide a set of instructions to download and install the required dependencies. (5 Points)
 Copy and paste instructions are always preferable to sentential explanations.
