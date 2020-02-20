@@ -32,10 +32,16 @@ These are the dependencies that will be installed when the Rocket League Bot Gui
 - webdriver_manager
 - websockets
 
-Provide a set of instructions to download and install the required dependencies. (5 Points)
-Copy and paste instructions are always preferable to sentential explanations.
-If these instructions are automated in your Makefile, make that clear in your README.
+`make install`
+`setup.bat`
 
-Provide any additional configurations instructions to set up the required runtime environment for the game and bot. (5 Points)
-Copy and paste instructions are always preferable to sentential explanations.
-If these instructions are automated in your Makefile, make that clear in your README.
+These commands will download the RLBot GUI and install all of the above dependencies.
+
+Note: The GUI requires Windows and an existing copy of Rocket League.
+
+Run the .exe file and drag the bot named "Carstiano Revnaldbot" to either of the team fields.
+Other team members or opponents are not required, but can be added by also dragging the bots to the respective teams.
+By clicking "Start", the GUI will start a game in Rocket League with the bot(s).
+The game continues until time runs out or "Stop" is clicked in the GUI.
+
+
