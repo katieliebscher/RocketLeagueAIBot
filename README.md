@@ -33,6 +33,7 @@ These are the dependencies that will be installed when the Rocket League Bot Gui
 - websockets
 
 `make install`
+
 `setup.bat`
 
 These commands will download the RLBot GUI and install all of the above dependencies.
