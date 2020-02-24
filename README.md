@@ -1,10 +1,13 @@
+# RocketLeagueAIBot: Carstiano Revnaldbot
 
-## Control Mechanism and High Level Strategy
+This project is for the University of Notre Dame Course: Game-Based AI Bots
+
+### Control Mechanism and High Level Strategy
 The win conditions of this game are 1. Score goals and 2. Prevent the other team from scoring goals. We then created a Behvaior Tree which implements our high level strategy aimed at successfully accomplishing these win conditions.
 ![Btree](Btree.png)
 
 
-## Dependencies
+### Dependencies
 These are the dependencies that will be installed when the Rocket League Bot Gui is first run. They are:
 
 - backports
@@ -30,15 +33,16 @@ These are the dependencies that will be installed when the Rocket League Bot Gui
 - webdriver_manager
 - websockets
 
-## Download Instructions and Configuration
+### Download Instructions and Configuration
 In order to use this bot, download this repository and run the following commands.
-`make install`
 
-`setup.bat`
+1. `make install`
+
+2. `setup.bat`
 
 These commands will download the RLBot GUI and install all of the above dependencies.
 
-Note: The GUI requires Windows and an existing copy of Rocket League.
+#### Note: The GUI requires Windows Operating System and an existing copy of Rocket League (which can be purchased on Steam).
 
 Run the .exe file and drag the bot named "Carstiano Revnaldbot" to either of the team fields.
 Other team members or opponents are not required, but can be added by also dragging the bots to the respective teams.
