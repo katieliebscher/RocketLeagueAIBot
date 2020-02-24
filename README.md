@@ -1,12 +1,10 @@
-# RocketLeagueAIBot
-This project is for the University of Notre Dame Course: Game-Based AI Bots
 
-Document your control mechanism, high-level strategy, and implemented functionality. (5 Points)
-This is your chance to highlight what makes your bot unique, why someone may want to use it/expand upon it, etc.
+## Control Mechanism and High Level Strategy
+The win conditions of this game are 1. Score goals and 2. Prevent the other team from scoring goals. We then created a Behvaior Tree which implements our high level strategy aimed at successfully accomplishing these win conditions.
 ![Btree](Btree.png)
 
-Provide the list of required dependencies for both your chosen game and your bot. (5 Points)
-### Dependencies
+
+## Dependencies
 These are the dependencies that will be installed when the Rocket League Bot Gui is first run. They are:
 
 - backports
@@ -32,6 +30,8 @@ These are the dependencies that will be installed when the Rocket League Bot Gui
 - webdriver_manager
 - websockets
 
+## Download Instructions and Configuration
+In order to use this bot, download this repository and run the following commands.
 `make install`
 
 `setup.bat`
