@@ -42,7 +42,7 @@ In order to use this bot, download this repository and run the following command
 
 These commands will download the RLBot GUI and install all of the above dependencies.
 
-#### Note: The GUI requires Windows Operating System and an existing copy of Rocket League (which can be purchased on Steam via: https://store.steampowered.com/app/252950/Rocket_League/).
+#### Note: The GUI requires Windows Operating System and an existing copy of Rocket League (which can be purchased on Steam via this link: https://store.steampowered.com/app/252950/Rocket_League/).
 
 Run the .exe file and drag the bot named "Carstiano Revnaldbot" to either of the team fields.
 Other team members or opponents are not required, but can be added by also dragging the bots to the respective teams.
