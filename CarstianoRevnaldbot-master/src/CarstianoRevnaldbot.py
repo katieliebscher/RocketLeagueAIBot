@@ -91,7 +91,8 @@ class MyBot(BaseAgent):
             drive_toward_ball(self, my_car, car_to_ball)
     
         draw_debug_message(self.renderer, my_car, action_display)
-
+        if(action_display == "blocking shot"):
+            draw_block_debug(self.renderer, my_car, info.goals[ourGoalIndex],  packet.game_ball)
         return self.controller_state
 
 def is_kickoff(packet) -> bool:

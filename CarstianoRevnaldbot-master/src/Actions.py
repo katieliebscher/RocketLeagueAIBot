@@ -1,15 +1,12 @@
 import math
 
+from Calculations import *
+from Debug import *
 from rlbot.agents.base_agent import BaseAgent, SimpleControllerState
 from rlbot.utils.structures.game_data_struct import GameTickPacket
-
+from util.Matrix import *
 from util.orientation import Orientation
 from util.vec import Vec3
-
-from Debug import *
-from Calculations import *
-from util.Matrix import *
-
 
 # TODO calculate turning radius and turning radius needed, if you can't make the turn then brake
 # Path Prediction
@@ -156,6 +153,7 @@ def brake_and_orient(self, my_car, goal, ball):
     
 # Defense
 def defend_goal(self, my_car, goal, ball) -> str:
+    block_shot(self, my_car, goal, ball)
     car_location = Vec3(my_car.physics.location)
     goal_location = Vec3(goal.location)
     car_to_goal = goal_location - car_location
@@ -165,17 +163,54 @@ def defend_goal(self, my_car, goal, ball) -> str:
     action_display = "defending"
     # checks if car is at goal location
     car_speed = Vec3(my_car.physics.velocity).length()
-    print(car_speed)
+
     if car_to_goal.length() > 1000:  
         drive_toward(self, my_car, car_to_goal)
         action_display = "driving to goal"
     elif car_to_goal.length() < 1000 and car_speed > 600:
         brake_and_orient(self, my_car, goal, ball)
+        block_shot(self, my_car, goal, ball)
+        action_display = "blocking shot"
         # Car is at goal
     else:
         drive_toward(self, my_car, car_to_ball)
 
     return action_display
+
+
+def block_shot(self, my_car, goal, ball):
+   
+    # Calculate car reorientation
+    car_orientation = Orientation(my_car.physics.rotation)
+    car_direction = car_orientation.forward
+    goal_direction = Vec3(goal.direction)
+
+    angle_to_goal = car_direction.ang_to(goal_direction)
+    
+    
+    ball_future_location = get_ball_predicted_pos(self, 30)
+    my_car_location = Vec3(my_car.physics.location)
+    car_to_ball = my_car_location.dist(ball_future_location)
+
+    if angle_to_goal < math.pi/2 and angle_to_goal > 0:
+        print("< pi/2 and > 0 jumpin left")
+        self.controller_state.jump = True
+        self.controller_state.steer = -1
+    elif angle_to_goal > math.pi/2 and angle_to_goal < math.pi:
+        print("< pi and > pi/2 jumpin right")
+        self.controller_state.jump = True
+        self.controller_state.steer = 1
+    else:
+        self.controller_state.jump = False
+    if car_to_ball < 100:
+        print("less than 100")
+        self.controller_state.jump = True
+    else:
+        self.controller_state.jump = False
+    #if car forward vector is parallel to goal, fine
+    #if car forward vector is > pi/2 & < pi go to pi (believe this means we are left of goal)
+    #if car forward vector is < pi/2 & > 0 go to 0 (believe this means we are right of goal)
+    
 
 
 # Offense
