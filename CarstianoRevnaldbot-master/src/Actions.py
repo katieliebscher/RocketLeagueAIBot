@@ -1,12 +1,15 @@
 import math
 
-from Calculations import *
-from Debug import *
 from rlbot.agents.base_agent import BaseAgent, SimpleControllerState
 from rlbot.utils.structures.game_data_struct import GameTickPacket
-from util.Matrix import *
+
 from util.orientation import Orientation
 from util.vec import Vec3
+
+from Debug import *
+from Calculations import *
+from util.Matrix import *
+
 
 # TODO calculate turning radius and turning radius needed, if you can't make the turn then brake
 # Path Prediction
@@ -40,6 +43,11 @@ def drive_for_kickoff(self, my_car, car_to_desired_location) -> str:
     self.controller_state.throttle = 1.0
     self.controller_state.steer = turn 
     self.controller_state.boost = True
+
+    car_location = Vec3(my_car.physics.location)
+    if (car_location.dist(car_to_desired_location) < 900):
+        jump(self)
+
     return action_display  
 
 def drive_toward_ball(self, my_car, car_to_ball):
@@ -76,8 +84,8 @@ def drive_toward(self, my_car, car_to_desired_location) -> str:
         action_display = "drive straight"
     
     self.controller_state.throttle = 1.0
-    self.controller_state.steer = turn   
-    return action_display  
+    self.controller_state.steer = turn
+    return action_display
 
 def find_correction(current: Vec3, ideal: Vec3, yaw) -> float:
     # Finds the angle from current to ideal vector in the xy-plane. Angle will be between -pi and +pi.
@@ -112,6 +120,11 @@ def inside_turning_radius(my_car, car_to_desired_location) -> bool:
     car_speed = Vec3(car_speed).length()
     turn_radius = turning_radius(car_speed)
     return turn_radius > min((local - Vec3(0, -turn_radius, 0)).length(), (local - Vec3(0, turn_radius, 0)).length())
+
+# Jumping (And eventually, hopefully, air movement)
+
+def jump(self):
+    self.controller_state.jump = True
 
 
 # Braking
