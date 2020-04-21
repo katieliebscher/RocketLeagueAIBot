@@ -218,8 +218,7 @@ class MyBot(BaseAgent):
 
         
         info = self.get_field_info()
-        boost_location = Vec3(find_nearest_boost(info, car_location, packet))
-        car_to_boost = boost_location - car_location
+
 
         # Determine which goal our bot is defending/attacking
         ourGoalIndex = my_car.team
@@ -253,10 +252,12 @@ class MyBot(BaseAgent):
         elif opponentGoalDist < 5000:
             action_display = "offensive"
 
-        # # Check if boost level is low
-        # elif get_car_boost_level(my_car) < 35:
-        #     action_display = "getting boost"
-        #     drive_toward_boost(self, my_car, car_to_boost)
+        # Check if boost level is low
+        elif get_car_boost_level(self) < 35:
+            boost_location = Vec3(find_nearest_boost(info, car_location, packet))
+            car_to_boost = boost_location - car_location
+            action_display = "getting boost"
+
 
 
         # Default    
@@ -266,19 +267,16 @@ class MyBot(BaseAgent):
             self.controller_state.boost = False
 
         draw_debug_message(self.renderer, my_car, action_display)
-        if(action_display == "blocking shot"):
-            draw_block_debug(self.renderer, my_car, info.goals[ourGoalIndex],  packet.game_ball)
         if(action_display == "offensive"):
             play_offense(self)
         if(action_display == "defensive"):
             defend_goal(self)
-
-
-
         if(action_display == "getting boost"):
             self.renderer.begin_rendering()
             self.renderer.draw_line_3d(self.bot_loc, car_to_boost, self.renderer.yellow())
             self.renderer.end_rendering()
+            drive_toward(self, car_to_boost)
+
         return self.controller_state
 
 def is_kickoff(packet) -> bool:

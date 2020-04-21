@@ -54,12 +54,12 @@ def drive_for_kickoff(self, target) -> str:
 def calculate_ball_to_goal(ball_location, goal)-> float:
     return ball_location.dist(goal.location)
 
-def get_car_boost_level(my_car) -> float:
-    return my_car.boost
+def get_car_boost_level(self) -> float:
+    return self.bot_boost
 
 
 def drive_toward(self, target):
-    self.controller_state.boost = False
+
      # Find the direction of our car using the Orientation class
     car_orientation = Orientation(self.bot_rot)
     car_direction = car_orientation.forward
@@ -67,9 +67,13 @@ def drive_toward(self, target):
     steer_correction_radians = find_correction(car_direction, target, car_yaw)
 
     if inside_turning_radius(self, target):
+        self.renderer.begin_rendering()
+        self.renderer.draw_string_3d(self.bot_loc,  2, 2, "Inside my Turning Radius" , self.renderer.white())
         self.controller_state.throttle = 0.0
+        self.controller_state.hand_brake = True
     else:
         self.controller_state.throttle = 1.0
+        self.controller_state.hand_brake = False
         
     if steer_correction_radians < math.radians(-10):
         # If the target is more than 10 degrees right from the centre, steer left
@@ -82,7 +86,7 @@ def drive_toward(self, target):
         turn = 0
 
     
-    self.controller_state.throttle = 1.0
+    #self.controller_state.throttle = 1.0
     self.controller_state.steer = turn
 
 def find_correction(current: Vec3, ideal: Vec3, yaw) -> float:
@@ -178,7 +182,7 @@ def brake_and_orient(self, my_car, goal, ball):
 def play_defense(self) -> Vec3:
      # Information needed
     self.renderer.begin_rendering()
-
+    
     # Information needed
     # 1.) The predicted ball path
     ball_prediction = self.get_ball_prediction_struct()
@@ -229,22 +233,44 @@ def play_defense(self) -> Vec3:
                 self.controller_state.steer = 1
                 jump(self, roll=1)
    
-            
         elif (ballX - 10 < carX):
             if (ballX - 20 < carX): # Ball is close enough to jump at it
                 self.controller_state.steer = -1
                 jump(self, roll=-1)
-        else:
-            defend_goal(self)
-#    print(Vec3(locations[119]).dist(center))
-#    if behind == True or Vec3(locations[119]).dist(center) <= 2400:
-#        drive_toward(self, goal)
-#    else:
-#        target = Vec3(locations[60])
-#        goal = target - self.bot_loc
-#        self.renderer.draw_line_3d(self.bot_loc, target, self.renderer.white())
-#        drive_toward(self, goal)
 
+        else: #Drive to goal and defend there 
+            info = self.get_field_info()
+            goal = info.goals[self.bot_team]
+            car_location = Vec3(self.bot_loc)
+            goal_location = Vec3(goal.location)
+            car_to_goal = goal_location - car_location
+
+            ball_future_location = get_ball_predicted_pos(self, 30)
+            car_to_ball = ball_future_location - self.bot_loc
+            action_display = "defending"
+            # checks if car is at goal location
+            car_speed = Vec3(self.bot_loc).length()
+            
+            if car_to_goal.length() > 2000: #If car is very far from goal, boost and go to goal
+                self.renderer.draw_string_3d(self.bot_loc,  2, 2, "sprinting to goal" , self.renderer.white())
+                self.controller_state.boost = True
+                drive_toward(self, car_to_goal)
+
+            elif car_to_goal.length() > 500:  #Car is close to goal, no need to boost
+                self.renderer.draw_string_3d(self.bot_loc,  2, 2, "driving to goal", self.renderer.white())
+                self.controller_state.boost = False
+                drive_toward(self, car_to_goal) 
+
+            elif (self.bot_loc_x < goal.location.x): #Don't go in goal
+                self.controller_state.boost = False
+                self.controller_state.throttle = -1.0
+                self.controller_state.hand_brake = False
+                self.renderer.draw_string_3d(self.bot_loc,  2, 2, "In goal backing up", self.renderer.white())    
+            
+            else: #track ball 
+                self.renderer.draw_string_3d(self.bot_loc,  2, 2, "tracking ball", self.renderer.white())
+                self.controller_state.boost = False
+                drive_toward(self, ball_future_location)
 
     self.renderer.end_rendering()
     return goal
@@ -265,20 +291,26 @@ def defend_goal(self) -> str:
     # checks if car is at goal location
     car_speed = Vec3(self.bot_loc).length()
 
-    if car_to_goal.length() > 500:  
-        self.renderer.draw_string_3d(self.bot_loc,  2, 2, "driving to goal", self.renderer.white())
+    if car_to_goal.length() > 2000:
+        self.renderer.draw_string_3d(self.bot_loc,  2, 2,str(car_to_goal.length()) , self.renderer.white())
+        self.controller_state.boost = True
         drive_toward(self, car_to_goal)
-        action_display = "driving to goal"
+    elif car_to_goal.length() > 500:  
+        self.renderer.draw_string_3d(self.bot_loc,  2, 2, "driving to goal", self.renderer.white())
+        self.controller_state.boost = False
+        drive_toward(self, car_to_goal)
     elif (self.bot_loc_x < goal.location.x): #Don't go in goal
+        self.controller_state.boost = False
         self.controller_state.throttle = -1.0
         self.controller_state.hand_brake = False
         self.renderer.draw_string_3d(self.bot_loc,  2, 2, "In goal backing up", self.renderer.white())
-    elif (car_to_goal.length() < 500):       
-        self.controller_state.hand_brake = True
-        self.controller_state.throttle = 0.0
-        self.renderer.draw_string_3d(self.bot_loc,  2, 2, str(car_speed), self.renderer.white())       
+   # elif (car_to_goal.length() < 500):       
+   #     self.controller_state.hand_brake = True
+   #     self.controller_state.throttle = 0.0
+   #     self.renderer.draw_string_3d(self.bot_loc,  2, 2, str(car_speed), self.renderer.white())       
     else:
         self.renderer.draw_string_3d(self.bot_loc,  2, 2, "tracking ball", self.renderer.white())
+        self.controller_state.boost = False
         drive_toward(self, ball_future_location)
 
     self.renderer.end_rendering()
@@ -378,7 +410,7 @@ def play_offense(self) -> Vec3:
             #Ball is to the left
             jump(self)
 
-    print(Vec3(locations[119]).dist(center))
+    #print(Vec3(locations[119]).dist(center))
     if behind == True or Vec3(locations[119]).dist(center) <= 2400:
         drive_toward(self, goal)
     else:
