@@ -66,7 +66,11 @@ def drive_toward(self, target):
     car_yaw = car_orientation.yaw
     steer_correction_radians = find_correction(car_direction, target, car_yaw)
 
-
+    if inside_turning_radius(my_car, car_to_desired_location):
+        self.controller_state.throttle = 0.0
+    else:
+        self.controller_state.throttle = 1.0
+        
     if steer_correction_radians < math.radians(-10):
         # If the target is more than 10 degrees right from the centre, steer left
         turn = -1
