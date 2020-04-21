@@ -230,6 +230,7 @@ def block_shot(self, my_car, goal, ball):
     #if car forward vector is > pi/2 & < pi go to pi (believe this means we are left of goal)
     #if car forward vector is < pi/2 & > 0 go to 0 (believe this means we are right of goal)
 
+
 # Offense
 def play_offense(self) -> Vec3:
     # Information needed
