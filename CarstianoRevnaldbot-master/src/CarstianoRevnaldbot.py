@@ -29,6 +29,7 @@ class MyBot(BaseAgent):
         self.bot_loc_x = 0
         self.bot_loc_y = 0
         self.bot_loc_z = 0
+        self.bot_speed = Vec3(0, 0, 0)
         self.bot_speed_x = 0
         self.bot_speed_y = 0
         self.bot_speed_z = 0
@@ -132,6 +133,7 @@ class MyBot(BaseAgent):
         self.bot_loc_x = values.game_cars[self.index].physics.location.x
         self.bot_loc_y = values.game_cars[self.index].physics.location.y
         self.bot_loc_z = values.game_cars[self.index].physics.location.z
+        self.bot_speed = values.game_cars[self.index].physics.velocity
         self.bot_speed_x = values.game_cars[self.index].physics.velocity.x
         self.bot_speed_y = values.game_cars[self.index].physics.velocity.y
         self.bot_speed_z = values.game_cars[self.index].physics.velocity.z
@@ -225,7 +227,8 @@ class MyBot(BaseAgent):
             opponentGoalIndex = 1
         else:
             opponentGoalIndex = 0
-    
+
+
         # If Statments in order to implement behavior tree
         #if kickoff --> drive at ball
         
@@ -241,9 +244,9 @@ class MyBot(BaseAgent):
             drive_for_kickoff(self,  car_to_ball)
 
         # Check if ball is near our goal
-        # elif ourGoalDist < 4000:
-        #     #Drive to defensive position
-        #     action_display = defend_goal(self, my_car, info.goals[ourGoalIndex], packet.game_ball)
+        elif ourGoalDist < 4000:
+             #Drive to defensive position
+            action_display = "defensive" 
 
 
         # Check if ball is near opponent's goal
@@ -267,6 +270,8 @@ class MyBot(BaseAgent):
             draw_block_debug(self.renderer, my_car, info.goals[ourGoalIndex],  packet.game_ball)
         if(action_display == "offensive"):
             play_offense(self)
+        if(action_display == "defensive"):
+            defend_goal(self)
 
 
 
