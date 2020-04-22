@@ -270,7 +270,7 @@ class MyBot(BaseAgent):
         if(action_display == "offensive"):
             play_offense(self)
         if(action_display == "defensive"):
-            defend_goal(self)
+            play_defense(self)
         if(action_display == "getting boost"):
             self.renderer.begin_rendering()
             self.renderer.draw_line_3d(self.bot_loc, car_to_boost, self.renderer.yellow())
