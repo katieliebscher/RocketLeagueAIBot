@@ -399,7 +399,10 @@ def determineTarget(self) -> int:
     oldRange = oldMax - oldMin
     newRange = newMax - newMin
     target = int((((oldValue - oldMin) * newRange) // oldRange) + newMin)
-    return(target)
+    if target > 119:
+        return 119
+    else:
+        return(target)
 
 def relative_location(center: Vec3, ori: Orientation, target: Vec3) -> Vec3:
     """
